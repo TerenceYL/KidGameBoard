@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="KidGameBoard.Views.ReportViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:KidGameBoard.ViewModels"
+             Background="White">
+    <UserControl.DataContext>
+        <vm:ReportViewerViewModel />
+    </UserControl.DataContext>
+    <StackPanel Margin="20">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="起始日期：" VerticalAlignment="Center"/>
+            <DatePicker SelectedDate="{Binding StartDate}" Margin="0,0,10,0"/>
+            <Label Content="結束日期：" VerticalAlignment="Center"/>
+            <DatePicker SelectedDate="{Binding EndDate}" Margin="0,0,10,0"/>
+            <Button Content="查詢" Command="{Binding QueryCommand}" Width="80"/>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding PersonScores}" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="姓名" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="總分" Binding="{Binding TotalScore}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>
