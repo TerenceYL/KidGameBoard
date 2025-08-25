@@ -70,11 +70,29 @@
                         <RowDefinition Height="1*" MinHeight="280" />
                     </Grid.RowDefinitions>
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <ListBox
-                            VerticalAlignment="Top"
+                            Grid.Column="0"
                             DisplayMemberPath="Displayname"
                             ItemsSource="{Binding WorkItems}"
                             SelectedItem="{Binding SelectedWorkItem, Mode=TwoWay}" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <Button
+                                Width="30"
+                                Height="30"
+                                Margin="5"
+                                Command="{Binding MoveWorkItemUpCommand}"
+                                Content="↑" />
+                            <Button
+                                Width="30"
+                                Height="30"
+                                Margin="5"
+                                Command="{Binding MoveWorkItemDownCommand}"
+                                Content="↓" />
+                        </StackPanel>
                     </Grid>
                     <Grid Grid.Row="1">
                         <StackPanel Margin="0,10,0,0">
