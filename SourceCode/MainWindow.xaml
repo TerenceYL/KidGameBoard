@@ -18,6 +18,7 @@
         <StackPanel>
             <Label Content="功能選單" />
             <Button Click="DailyRecord_Click" Content="每日紀錄登記" />
+            <Button Click="PointRedemption_Click" Content="積分兌換" />
             <Button Click="Report_Click" Content="報表" />
             <Button Click="BaseInfo_Click" Content="基本資料維護" />
         </StackPanel>

@@ -38,7 +38,12 @@ namespace KidGameBoard
 
         private void Report_Click(object sender, RoutedEventArgs e)
         {
-            MainContent.Content = new ReportViewer();
+            MainContent.Content = new NewReportViewer();
+        }
+
+        private void PointRedemption_Click(object sender, RoutedEventArgs e)
+        {
+            MainContent.Content = new PointRedemption();
         }
     }
 }

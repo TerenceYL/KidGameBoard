@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,5 +50,23 @@ namespace KidGameBoard.Models
 
         [ObservableProperty]
         private List<string> workItemIds = new(); // 當日有加分的項目ID清單
+    }
+
+    public partial class Redemption : BaseModel
+    {
+        [ObservableProperty]
+        private string personId;
+
+        [ObservableProperty]
+        private int score;
+
+        [ObservableProperty]
+        private DateTime redemptionDate;
+    }
+
+    public partial class RedemptionRecord : Redemption
+    {
+        [ObservableProperty]
+        private string personName;
     }
 }

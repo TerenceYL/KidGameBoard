@@ -1,0 +1,56 @@
+<UserControl x:Class="KidGameBoard.Views.PointRedemption"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:KidGameBoard.Views"
+             xmlns:vm="clr-namespace:KidGameBoard.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="White">
+    <UserControl.DataContext>
+        <vm:PointRedemptionViewModel/>
+    </UserControl.DataContext>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="選擇人員：" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding People}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding SelectedPerson}"
+                          Width="200"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Label Content="總分數："/>
+                <TextBlock Text="{Binding TotalScore}" VerticalAlignment="Center"/>
+                <Label Content="已兌換分數：" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding RedeemedScore}" VerticalAlignment="Center"/>
+                <Label Content="可用分數：" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding AvailableScore}" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <Label Content="兌換分數："/>
+                <TextBox Text="{Binding ScoreToRedeem, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                <Button Content="兌換" Command="{Binding RedeemCommand}" Margin="10,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <GroupBox Grid.Row="1" Header="兌換紀錄" Margin="0,10,0,0">
+            <ListView ItemsSource="{Binding RedemptionHistory}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="兌換日期" DisplayMemberBinding="{Binding RedemptionDate, StringFormat='yyyy-MM-dd HH:mm:ss'}" Width="200"/>
+                        <GridViewColumn Header="兌換分數" DisplayMemberBinding="{Binding Score}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </GroupBox>
+    </Grid>
+</UserControl>

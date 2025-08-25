@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+using KidGameBoard.Common;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 
@@ -9,6 +10,11 @@ namespace KidGameBoard
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            DatabaseHelper.EnsureTablesExist();
+        }
     }
 
 }
