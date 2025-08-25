@@ -38,12 +38,12 @@ namespace KidGameBoard.ViewModels
         {
 
             LoadPeople();
-            LoadWorkItems(); // ¸ü¤J¤u§@¶µ¥Ø
+            LoadWorkItems(); // è¼‰å…¥å·¥ä½œé …ç›®
             IsQueryButtonEnable = true;
         }
 
 
-        #region ¤H­ûºûÅ@
+        #region äººå“¡ç¶­è­·
 
         private void LoadPeople()
         {
@@ -103,7 +103,7 @@ namespace KidGameBoard.ViewModels
         private void DeletePerson()
         {
             if (SelectedPerson == null) return;
-            if (MessageBox.Show("½T©w­n§R°£³o­Ó¤H­û¶Ü¡H\n§R°£«á±NµLªk«ì´_¡C", "½T»{§R°£", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
+            if (MessageBox.Show("ç¢ºå®šè¦åˆªé™¤é€™å€‹äººå“¡å—ï¼Ÿ\nåˆªé™¤å¾Œå°‡ç„¡æ³•æ¢å¾©ã€‚", "ç¢ºèªåˆªé™¤", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
 
             using var conn = new MySqlConnection(_connStr);
             conn.Open();
@@ -130,7 +130,7 @@ namespace KidGameBoard.ViewModels
 
         #endregion
 
-        #region ¤u§@¶µ¥ØºûÅ@
+        #region å·¥ä½œé …ç›®ç¶­è­·
         [RelayCommand]
         private void LoadWorkItems()
         {
@@ -175,7 +175,7 @@ namespace KidGameBoard.ViewModels
             cmd.Parameters.AddWithValue("@desc", newItem.Description);
             cmd.Parameters.AddWithValue("@score", newItem.Score);
             cmd.Parameters.AddWithValue("@isEnabled", newItem.IsEnabled);
-            cmd.Parameters.AddWithValue("@seq", newItem.IsEnabled);
+            cmd.Parameters.AddWithValue("@seq", newItem.Seq);
             cmd.ExecuteNonQuery();
             LoadWorkItems();
             EditWorkItem = new WorkItem();
@@ -202,7 +202,7 @@ namespace KidGameBoard.ViewModels
         private void DeleteWorkItem()
         {
             if (SelectedWorkItem == null) return;
-            if (MessageBox.Show("½T©w­n§R°£³o­Ó¤u§@¶µ¥Ø¶Ü¡H\n§R°£«á±NµLªk«ì´_¡C", "½T»{§R°£", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
+            if (MessageBox.Show("ç¢ºå®šè¦åˆªé™¤é€™å€‹å·¥ä½œé …ç›®å—ï¼Ÿ\nåˆªé™¤å¾Œå°‡ç„¡æ³•æ¢å¾©ã€‚", "ç¢ºèªåˆªé™¤", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No) return;
 
             using var conn = new MySqlConnection(_connStr);
             conn.Open();
