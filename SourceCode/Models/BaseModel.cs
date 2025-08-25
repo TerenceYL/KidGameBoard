@@ -1,9 +1,4 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KidGameBoard.Models
 {
@@ -68,5 +63,17 @@ namespace KidGameBoard.Models
     {
         [ObservableProperty]
         private string personName;
+    }
+
+    public class PersonScore
+    {
+        public string Name { get; set; } = "";
+        
+        public int TotalScore { get; set; }
+
+        public int RedeemedScore { get; set; }
+
+        public int AvailableScore { get; set; }
+
     }
 }

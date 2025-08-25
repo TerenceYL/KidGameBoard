@@ -1,11 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using KidGameBoard.Common;
 using KidGameBoard.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using KidGameBoard.Common;
 
 namespace KidGameBoard.ViewModels
 {
@@ -100,9 +98,9 @@ namespace KidGameBoard.ViewModels
             // Calculate total redeemed scores
             var personRedeemedScoreDict = new Dictionary<string, int>();
             var cmdRedeemed = new MySqlCommand(
-                "SELECT personId, SUM(score) as redeemedScore FROM redemption WHERE redemptionDate >= @start AND redemptionDate <= @end GROUP BY personId", conn);
-            cmdRedeemed.Parameters.AddWithValue("@start", StartDate);
-            cmdRedeemed.Parameters.AddWithValue("@end", EndDate);
+                "SELECT personId, SUM(score) as redeemedScore FROM redemption WHERE DATE(redemptionDate) >= @start AND DATE(redemptionDate) <= @end GROUP BY personId", conn);
+            cmdRedeemed.Parameters.AddWithValue("@start", StartDate.ToString("yyyy-MM-dd"));
+            cmdRedeemed.Parameters.AddWithValue("@end", EndDate.ToString("yyyy-MM-dd"));
 
             using (var reader = cmdRedeemed.ExecuteReader())
             {
@@ -123,7 +121,8 @@ namespace KidGameBoard.ViewModels
                 {
                     Name = person.Name,
                     TotalScore = earnedScore,
-                    RedeemedScore = redeemedScore
+                    RedeemedScore = redeemedScore,
+                    AvailableScore = earnedScore - redeemedScore
                 });
             }
         }

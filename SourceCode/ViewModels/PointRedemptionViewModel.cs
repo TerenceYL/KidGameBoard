@@ -3,12 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using KidGameBoard.Common;
 using KidGameBoard.Models;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace KidGameBoard.ViewModels
@@ -36,11 +31,16 @@ namespace KidGameBoard.ViewModels
         private int _scoreToRedeem;
 
         [ObservableProperty]
+        private bool isQueryButtonEnable = false;
+
+        [ObservableProperty]
         private ObservableCollection<RedemptionRecord> _redemptionHistory = new();
 
         public PointRedemptionViewModel()
         {
             LoadPeople();
+
+            IsQueryButtonEnable = true;
         }
 
         private void LoadPeople()
@@ -83,7 +83,7 @@ namespace KidGameBoard.ViewModels
                 var cmd = new MySqlCommand(@"
                     SELECT SUM(wi.score)
                     FROM dailyrecord dr
-                    JOIN workitem wi ON JSON_CONTAINS(dr.workItemIds, CONCAT('""', wi.id, '""'))
+                    JOIN workitem wi ON FIND_IN_SET(wi.id, dr.workItemIds) > 0
                     WHERE dr.personId = @personId", conn);
                 cmd.Parameters.AddWithValue("@personId", SelectedPerson.Id);
                 var result = cmd.ExecuteScalar();

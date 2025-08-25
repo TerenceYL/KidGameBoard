@@ -8,8 +8,5 @@
     <Compile Update="Views\DailyRecordMaintain.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ReportViewer.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 </Project>

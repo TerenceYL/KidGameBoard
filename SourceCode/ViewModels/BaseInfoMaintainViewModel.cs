@@ -3,10 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using KidGameBoard.Common;
 using KidGameBoard.Models;
 using MySql.Data.MySqlClient;
-using System;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Xml.Linq;
 
 namespace KidGameBoard.ViewModels
 {
@@ -38,52 +36,12 @@ namespace KidGameBoard.ViewModels
 
         public BaseInfoMaintainViewModel()
         {
-            EnsureTablesExist();
+
             LoadPeople();
             LoadWorkItems(); // 載入工作項目
             IsQueryButtonEnable = true;
         }
 
-        /// <summary>
-        /// 檢查並建立所有需要的 Table
-        /// </summary>
-        private void EnsureTablesExist()
-        {
-            using var conn = new MySqlConnection(_connStr);
-            conn.Open();
-
-            // 建立 person table
-            var personTable = @"
-                CREATE TABLE IF NOT EXISTS person (
-                    id VARCHAR(36) PRIMARY KEY,
-                    name VARCHAR(100) NOT NULL,
-                    description VARCHAR(255)
-                );";
-            new MySqlCommand(personTable, conn).ExecuteNonQuery();
-
-            // 建立 workitem table
-            var workitemTable = @"
-                CREATE TABLE IF NOT EXISTS workitem (
-                    id VARCHAR(36) PRIMARY KEY,
-                    name VARCHAR(100) NOT NULL,
-                    description VARCHAR(255),
-                    score INT NOT NULL,
-                    isEnabled BOOLEAN NOT NULL,
-                    seq INT NOT NULL
-                );";
-            new MySqlCommand(workitemTable, conn).ExecuteNonQuery();
-
-            // 建立 dailyrecord table
-            var dailyrecordTable = @"
-                CREATE TABLE IF NOT EXISTS dailyrecord (
-                    id VARCHAR(36) PRIMARY KEY,
-                    date DATE NOT NULL,
-                    personId VARCHAR(36) NOT NULL,
-                    workItemIds TEXT NOT NULL,
-                    FOREIGN KEY (personId) REFERENCES person(id)
-                );";
-            new MySqlCommand(dailyrecordTable, conn).ExecuteNonQuery();
-        }
 
         #region 人員維護
 
@@ -272,6 +230,73 @@ namespace KidGameBoard.ViewModels
                 EditWorkItem = new WorkItem();
         }
 
+        [RelayCommand]
+        private void MoveWorkItemUp()
+        {
+            if (SelectedWorkItem == null) return;
+
+            var selectedIndex = WorkItems.IndexOf(SelectedWorkItem);
+            if (selectedIndex > 0)
+            {
+                var upperItem = WorkItems[selectedIndex - 1];
+                SwapWorkItemSeq(SelectedWorkItem, upperItem);
+            }
+        }
+
+        [RelayCommand]
+        private void MoveWorkItemDown()
+        {
+            if (SelectedWorkItem == null) return;
+
+            var selectedIndex = WorkItems.IndexOf(SelectedWorkItem);
+            if (selectedIndex < WorkItems.Count - 1)
+            {
+                var lowerItem = WorkItems[selectedIndex + 1];
+                SwapWorkItemSeq(SelectedWorkItem, lowerItem);
+            }
+        }
+
+        private void SwapWorkItemSeq(WorkItem item1, WorkItem item2)
+        {
+            (item1.Seq, item2.Seq) = (item2.Seq, item1.Seq);
+
+            using var conn = new MySqlConnection(_connStr);
+            conn.Open();
+            using var transaction = conn.BeginTransaction();
+            try
+            {
+                var cmd1 = new MySqlCommand("UPDATE workitem SET seq=@seq WHERE id=@id", conn, transaction);
+                cmd1.Parameters.AddWithValue("@id", item1.Id);
+                cmd1.Parameters.AddWithValue("@seq", item1.Seq);
+                cmd1.ExecuteNonQuery();
+
+                var cmd2 = new MySqlCommand("UPDATE workitem SET seq=@seq WHERE id=@id", conn, transaction);
+                cmd2.Parameters.AddWithValue("@id", item2.Id);
+                cmd2.Parameters.AddWithValue("@seq", item2.Seq);
+                cmd2.ExecuteNonQuery();
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                // Optionally handle the exception
+            }
+            var selectedId = SelectedWorkItem?.Id;
+            LoadWorkItems();
+
+            if (selectedId != null)
+            {
+                foreach (var item in WorkItems)
+                {
+                    if (item.Id == selectedId)
+                    {
+                        SelectedWorkItem = item;
+                        break;
+                    }
+                }
+            }
+        }
         #endregion
     }
 }

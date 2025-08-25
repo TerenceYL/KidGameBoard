@@ -3,9 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using KidGameBoard.Common;
 using KidGameBoard.Models;
 using MySql.Data.MySqlClient;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace KidGameBoard.ViewModels
 {
